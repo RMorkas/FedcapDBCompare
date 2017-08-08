@@ -1,0 +1,2 @@
+﻿CREATE USER [FedCapCMDbUser] FOR LOGIN [FedCapCMDBUser];
+

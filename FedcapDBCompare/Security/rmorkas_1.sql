@@ -1,0 +1,3 @@
+﻿CREATE LOGIN [rmorkas]
+    WITH PASSWORD = N'fqbnzdshgjngslgb,pydeih}msFT7_&#$!~<7jae7jxwkidg', SID = 0xCAF95B01235B1B4B9208A82F341B9E56, DEFAULT_DATABASE = [UAT_FedCapCM], DEFAULT_LANGUAGE = [us_english], CHECK_POLICY = OFF;
+

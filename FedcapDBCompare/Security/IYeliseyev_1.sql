@@ -1,0 +1,3 @@
+﻿CREATE LOGIN [IYeliseyev]
+    WITH PASSWORD = N'|fq;bnaz,dGsDXhgsjngWsgbmsFT7_&#$!~<pw@deieShYja', SID = 0x89C28ECBE03C8A4D9AD0C714AF6F82D7, DEFAULT_LANGUAGE = [us_english], CHECK_POLICY = OFF;
+

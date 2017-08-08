@@ -1,0 +1,3 @@
+﻿CREATE LOGIN [FedCapCMBTCUser]
+    WITH PASSWORD = N'fBqbnzdshg=jnk~gsgD2 AubmsFT7_&#$!~<pd=eihjaejbx', SID = 0x42E39067F09EE645BCF9B06DA6F5F171, DEFAULT_LANGUAGE = [us_english], CHECK_POLICY = OFF;
+

@@ -1,0 +1,26 @@
+﻿CREATE TABLE [dbo].[OFI_Interface_Sanction_audit] (
+    [id]                        INT            IDENTITY (1, 1) NOT NULL,
+    [dateadded]                 DATETIME       NOT NULL,
+    [clientid]                  INT            NOT NULL,
+    [OFI office]                VARCHAR (50)   NULL,
+    [clientNo]                  VARCHAR (50)   NULL,
+    [caseNo]                    VARCHAR (50)   NULL,
+    [non compliance type]       VARCHAR (50)   NULL,
+    [Date]                      SMALLDATETIME  NULL,
+    [Details of Non Compliance] VARCHAR (MAX)  NULL,
+    [First Sanction]            VARCHAR (50)   NULL,
+    [Verbal Contact Date Time]  DATETIME       NULL,
+    [Mail Contact Date Time]    DATETIME       NULL,
+    [Home Visit Date Time]      DATETIME       NULL,
+    [Contact Established]       VARCHAR (50)   NULL,
+    [Good cause claimed]        VARCHAR (50)   NULL,
+    [Good cause claimed text]   NVARCHAR (MAX) NULL,
+    [Good cause Type]           NVARCHAR (50)  NULL,
+    [Good cause Denial Text]    NVARCHAR (MAX) NULL,
+    [Staff member Witness]      NVARCHAR (50)  NULL,
+    [BTC Staff member Phone]    NVARCHAR (50)  NULL,
+    [scheduleid]                INT            NULL,
+    [datesubmitted]             DATETIME       NULL,
+    [outreachresetprocessed]    DATETIME       NULL
+);
+
