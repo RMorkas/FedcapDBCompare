@@ -6,6 +6,9 @@
     [Abbreviation]            VARCHAR (20) NULL,
     [IsFedcapAcademy]         BIT          CONSTRAINT [DF_FederalActivityType_IsFedcapAcademy] DEFAULT ((0)) NULL,
     [FederalActivityPriority] INT          NULL,
+    [IsHomeWorkHours]         BIT          NULL,
     CONSTRAINT [PK_FederalActivityType] PRIMARY KEY CLUSTERED ([FederalActivityId] ASC)
 );
+
+
 

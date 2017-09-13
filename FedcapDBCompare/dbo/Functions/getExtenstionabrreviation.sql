@@ -1,4 +1,5 @@
-﻿CREATE  function dbo.getExtenstionabrreviation (@extenstionenum int) returns varchar(100)
+﻿
+CREATE  function [dbo].[getExtenstionabrreviation] (@extenstionenum int) returns varchar(100)
 as
 begin
 declare @Extenstionabrreviation varchar(100)
@@ -10,6 +11,7 @@ select @Extenstionabrreviation =
   when 642 then 'EMG' 
  when 643 then 'EDU' 
  when 644 then 'WRK' 
+  when 940 then 'VIO' 
    else ''
  end 
 

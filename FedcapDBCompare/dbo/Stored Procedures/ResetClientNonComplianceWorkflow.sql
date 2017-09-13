@@ -32,39 +32,47 @@ BEGIN
 		@nonComplianceGoodCause = ClientContactId_NotApprovedGoodCause
 	FROM dbo.CheckForNonCompliance (@clientId)
 
-	IF @nonComplianceScheduleId IS NULL
-		BEGIN
-			/* No absent schedule was returned so we can take client out of non-compliance */
-			EXEC dbo.RemoveClientFromNonComplianceTrack @clientId
-		END
+	IF EXISTS (SELECT ClientId FROM dbo.Client WHERE ClientId = @clientId AND SanctionEffectiveDate IS NOT NULL)
+	BEGIN
+		EXEC dbo.ProcessSanctionAttendedActivityWorkflow @clientId
+	END
 	ELSE
 		BEGIN
-			/* Absent schedule was returned so client will be assigned to the non-compliance branch */
-			EXEC dbo.AssignClientToNonComplianceBranch @clientId, 'Schedule', @nonComplianceScheduleId
+			IF @nonComplianceScheduleId IS NULL
+				BEGIN
+					/* No absent schedule was returned so we can take client out of non-compliance */
+					EXEC dbo.RemoveClientFromNonComplianceTrack @clientId
+				END
+			ELSE
+				BEGIN
+					/* Absent schedule was returned so client will be assigned to the non-compliance branch */
+					EXEC dbo.AssignClientToNonComplianceBranch @clientId, 'Schedule', @nonComplianceScheduleId
 
-			/* Phone outreach */
-			EXEC dbo.ResetClientWorkflowState @clientId, @phoneActionId, 14, @phoneContactId, 'ResetClientNonComplianceWorkflow'
+					/* Phone outreach */
+					EXEC dbo.ResetClientWorkflowState @clientId, @phoneActionId, 14, @phoneContactId, NULL, 'ResetClientNonComplianceWorkflow'
 					
-			/* Mail outreach */
-			EXEC dbo.ResetClientWorkflowState @clientId, @mailActionId, 14, @mailContactId, 'ResetClientNonComplianceWorkflow'
+					/* Mail outreach */
+					EXEC dbo.ResetClientWorkflowState @clientId, @mailActionId, 14, @mailContactId, NULL, 'ResetClientNonComplianceWorkflow'
 
-			/* Home outreach */
-			EXEC dbo.ResetClientWorkflowState @clientId, @homeActionId, 14, @homeContactId, 'ResetClientNonComplianceWorkflow'
+					/* Home outreach */
+					EXEC dbo.ResetClientWorkflowState @clientId, @homeActionId, 14, @homeContactId, NULL, 'ResetClientNonComplianceWorkflow'
 
-			/* See if there was a sanction request sent after the missed activity */
-			SELECT @absentScheduleDate = [Date] FROM dbo.Schedule WHERE ScheduleId = @nonComplianceScheduleId
+					/* See if there was a sanction request sent after the missed activity */
+					SELECT @absentScheduleDate = [Date] FROM dbo.Schedule WHERE ScheduleId = @nonComplianceScheduleId
 
-			/* If all of the outreach attempts are complete then see if we need to set the SanctionRequest state to active */
-			IF @phoneActionId IS NOT NULL AND @mailActionId IS NOT NULL AND @homeActionId IS NOT NULL AND 
-				EXISTS (SELECT Id FROM dbo.OFI_Interface_Sanction_audit WHERE ClientId = @clientId AND datesubmitted > @absentScheduleDate)
-			BEGIN
-				/* If there was sanction request sent after the missed activity then just set the existing WorkflowClientAction record for 
-				the sanction request to active */
-				IF EXISTS (SELECT WorkflowClientActionId FROM dbo.WorkflowClientAction WHERE ClientId = @clientId AND WorkflowActionId = @sanctionRequestActionId AND IsActive = 0)
-					UPDATE dbo.WorkflowClientAction
-					SET IsActive = 1, UpdatedAt = GETDATE(), UpdatedBy = 'ResetClientNonComplianceWorkflow'
-					FROM dbo.WorkflowClientAction ca
-					WHERE ca.ClientId = @clientId AND ca.WorkflowActionId = @sanctionRequestActionId AND IsActive = 0
-			END					
-		END
+					/* If all of the outreach attempts are complete then see if we need to set the SanctionRequest state to active */
+					IF @phoneActionId IS NOT NULL AND @mailActionId IS NOT NULL AND @homeActionId IS NOT NULL AND 
+						EXISTS (SELECT Id FROM dbo.OFI_Interface_Sanction_audit WHERE ClientId = @clientId AND datesubmitted > @absentScheduleDate)
+					BEGIN
+						/* If there was sanction request sent after the missed activity then just set the existing WorkflowClientAction record for 
+						the sanction request to active */
+						IF EXISTS (SELECT WorkflowClientActionId FROM dbo.WorkflowClientAction WHERE ClientId = @clientId AND WorkflowActionId = @sanctionRequestActionId AND IsActive = 0)
+							UPDATE dbo.WorkflowClientAction
+							SET IsActive = 1, UpdatedAt = GETDATE(), UpdatedBy = 'ResetClientNonComplianceWorkflow'
+							FROM dbo.WorkflowClientAction ca
+							WHERE ca.ClientId = @clientId AND ca.WorkflowActionId = @sanctionRequestActionId AND IsActive = 0
+					END					
+				END
+			END
+		
 END

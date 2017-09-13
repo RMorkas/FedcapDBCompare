@@ -91,11 +91,43 @@
     [IsLocked]                         BIT             CONSTRAINT [DF_ClientIntake_IsLocked] DEFAULT ((0)) NOT NULL,
     [IsDeleted]                        BIT             CONSTRAINT [DF_ClientIntake_IsDeleted] DEFAULT ((0)) NOT NULL,
     [AssignedStaffMemberId]            INT             NULL,
+    [PreferredName]                    VARCHAR (50)    NULL,
+    [HasRentVouucher]                  BIT             NULL,
+    [IsShelter]                        BIT             NULL,
+    [ShelterName]                      VARCHAR (50)    NULL,
+    [SpecialistName]                   VARCHAR (50)    NULL,
+    [ContactNumber]                    VARCHAR (50)    NULL,
+    [HasTravelRestrictions]            BIT             NULL,
+    [HasBankAccount]                   BIT             NULL,
+    [HasCounselor]                     BIT             NULL,
+    [IsAttendingEducation]             BIT             NULL,
+    [IsAttendingTraining]              BIT             NULL,
+    [IsAttendInternship]               BIT             NULL,
+    [LongTerm]                         VARCHAR (3000)  NULL,
+    [ShortTerm]                        VARCHAR (3000)  NULL,
+    [SchoolProgramId]                  INT             NULL,
+    [TrainingId]                       INT             NULL,
+    [IsFelony]                         BIT             NULL,
+    [IsParole]                         BIT             NULL,
+    [OfficerName]                      VARCHAR (50)    NULL,
+    [OfficerNumber]                    VARCHAR (50)    NULL,
+    [CourtComment]                     VARCHAR (3000)  NULL,
+    [IsActiveACS]                      BIT             NULL,
+    [IsServiceACS]                     BIT             NULL,
+    [HasChildrenFoster]                BIT             NULL,
+    [IsCurrentFoster]                  BIT             NULL,
+    [ACSComment]                       VARCHAR (3000)  NULL,
+    [RepresentativeSignature]          VARCHAR (MAX)   NULL,
+    [RepresentativeSignatureDate]      SMALLDATETIME   NULL,
+    [RepresentativeReasonTypeId]       INT             NULL,
+    [RepresentativeScanImageId]        INT             NULL,
     CONSTRAINT [PK_ClientIntake] PRIMARY KEY CLUSTERED ([ClientIntakeId] ASC),
     CONSTRAINT [FK_ClinetIntake_Client] FOREIGN KEY ([ClientId]) REFERENCES [dbo].[Client] ([ClientId]),
     CONSTRAINT [FK_ClinetIntake_Company] FOREIGN KEY ([CompanyId]) REFERENCES [dbo].[Company] ([CompanyId]),
     CONSTRAINT [FK_ClinetIntake_FormVersion] FOREIGN KEY ([FormVersionId]) REFERENCES [dbo].[FormVersion] ([FormVersionId])
 );
+
+
 
 
 GO

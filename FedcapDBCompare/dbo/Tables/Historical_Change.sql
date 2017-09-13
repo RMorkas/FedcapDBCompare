@@ -86,6 +86,11 @@
     [AspireRegStartDate]                     DATETIME        NULL,
     [AspireRegEndDate]                       DATETIME        NULL,
     [FLSA]                                   INT             NULL,
+    [BudgetId]                               INT             NULL,
+    [ClosedInd]                              VARCHAR (5)     NULL,
+    [ClosedStartDate]                        DATETIME        NULL,
     PRIMARY KEY CLUSTERED ([Id] ASC)
 );
+
+
 

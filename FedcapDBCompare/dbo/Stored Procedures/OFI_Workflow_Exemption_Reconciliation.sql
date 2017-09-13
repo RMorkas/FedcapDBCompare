@@ -4,8 +4,12 @@ AS
 
 DECLARE @clientId INT
 DECLARE @nonComplianceBranchId INT
+DECLARE @sanctionBranchId INT
+DECLARE @sanctionLiftBranchId INT
 
 SELECT @nonComplianceBranchId = WorkflowBranchId FROM dbo.WorkflowBranch WHERE Code = 'NonCompliance'
+SELECT @sanctionBranchId = WorkflowBranchId FROM dbo.WorkflowBranch WITH (NOLOCK) WHERE Code = 'Sanction'
+SELECT @sanctionLiftBranchId = WorkflowBranchId FROM dbo.WorkflowBranch WITH (NOLOCK) WHERE Code = 'SanctionLift'
 
 /* Take clients currently exempt out of non-compliance */
 DECLARE cursorSchedule CURSOR -- Declare cursor
@@ -28,6 +32,14 @@ WHILE @@FETCH_STATUS = 0
 BEGIN
 	
 	EXEC [dbo].[RemoveClientFromNonComplianceTrack] @clientId
+
+	/* Clear sanction and sanction lift states */
+	UPDATE dbo.WorkflowClientAction
+	SET IsActive = 0, UpdatedBy = 'SYSTEM', UpdatedAt = GETDATE()
+	FROM dbo.WorkflowClientAction ca
+	INNER JOIN dbo.WorkflowAction a ON ca.WorkflowActionId = a.WorkflowActionId
+	WHERE ca.ClientId = @clientId AND ca.IsActive = 1 AND 
+		(a.WorkflowBranchId = @sanctionBranchId OR a.WorkflowBranchId = @sanctionLiftBranchId)
 
 	FETCH NEXT FROM cursorSchedule INTO @clientId
 END

@@ -14,7 +14,7 @@ ALTER ROLE [db_owner] ADD MEMBER [FedCapCMBTCUser];
 
 
 GO
-ALTER ROLE [db_owner] ADD MEMBER [FedcapCMCrSUser];
+
 
 
 GO
@@ -55,4 +55,16 @@ ALTER ROLE [db_datawriter] ADD MEMBER [FEDCAP\PCarrasco];
 
 GO
 ALTER ROLE [db_datawriter] ADD MEMBER [FEDCAP\sbraksmajer];
+
+
+GO
+ALTER ROLE [db_owner] ADD MEMBER [pcarrasco];
+
+
+GO
+ALTER ROLE [db_owner] ADD MEMBER [mhanna];
+
+
+GO
+ALTER ROLE [db_datawriter] ADD MEMBER [IYeliseyev];
 

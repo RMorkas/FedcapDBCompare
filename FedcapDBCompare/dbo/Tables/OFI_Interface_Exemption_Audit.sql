@@ -11,8 +11,10 @@
     [OFI office]             VARCHAR (50)   NULL,
     [datesubmitted]          DATETIME       NULL,
     [dateadded]              DATETIME       NULL,
-    [CFD_Name]               VARCHAR (50)   NULL,
+    [CFD_Name]               VARCHAR (100)  NULL,
     [ExemptionRequestId]     INT            NULL,
     [imaging_Note]           VARCHAR (1000) NULL
 );
+
+
 

@@ -5,7 +5,6 @@ BEGIN
 	SET NOCOUNT ON;
 
 	DECLARE @nonComplianceBranchId INT
-	DECLARE @sanctionBranchId INT
 	DECLARE @orientationBranchId INT
 	DECLARE @currentBranchId INT
 	DECLARE @branchIdToAssign INT
@@ -15,9 +14,6 @@ BEGIN
 
 	/* Get Orientation branch Id */
 	SELECT @orientationBranchId = WorkflowBranchId FROM dbo.WorkflowBranch WITH (NOLOCK) WHERE Code = 'Orientation'
-
-	/* Get Sanction branch Id */
-	SELECT @sanctionBranchId = WorkflowBranchId FROM dbo.WorkflowBranch WITH (NOLOCK) WHERE Code = 'Sanction'
 
 	/* Get current branch (track) of client */
 	SELECT TOP 1 @currentBranchId = WorkflowBranchId 
@@ -46,6 +42,6 @@ BEGIN
 	SET IsActive = 0, UpdatedBy = 'SYSTEM', UpdatedAt = GETDATE()
 	FROM dbo.WorkflowClientAction ca
 	INNER JOIN dbo.WorkflowAction a ON ca.WorkflowActionId = a.WorkflowActionId
-	WHERE ca.ClientId = @clientId AND ca.IsActive = 1 AND (a.WorkflowBranchId = @nonComplianceBranchId OR a.WorkflowBranchId = @sanctionBranchId)
+	WHERE ca.ClientId = @clientId AND ca.IsActive = 1 AND a.WorkflowBranchId = @nonComplianceBranchId
 
 END

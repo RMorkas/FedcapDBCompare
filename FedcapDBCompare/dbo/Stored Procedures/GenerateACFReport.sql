@@ -1,6 +1,4 @@
-﻿
-
-CREATE  procedure [dbo].[GenerateACFReport] (@startdate datetime, @enddate datetime)
+﻿CREATE  procedure [dbo].[GenerateACFReport] (@startdate datetime, @enddate datetime)
 as 
 begin
 
@@ -9,12 +7,13 @@ begin
 --declare @enddate datetime
 
 
---set @startdate = '06/01/2017'
---set @enddate = '06/30/2017'
+--set @startdate = '08/01/2017'
+--set @enddate = '08/31/2017'
 
-select  distinct dbo.client.clientno as [Client ID], cast(year(@startdate) as varchar) + isnull(RIGHT('00' + cast(month(@Startdate) as varchar(2)),2),'00') as [Reporting Month],
- [dbo].[Case].CaseNo, replace(dbo.client.SSN,'-','') as SSN,
-case [dbo].[getTotalPayment](dbo.client.clientid,@startdate, @enddate) when 0 then 2 else 1 end as [Employment Status],
+select  distinct dbo.client.clientno as [Client ID], cast(year(@startdate) as varchar) + isnull(RIGHT('00' + cast(month(@Startdate) as varchar(2)),2),'00') as [Reporting Month],CaseNo, 
+case when [dbo].[getTotalPayment](dbo.client.clientid,@startdate, @enddate) = 0 or  isnull([dbo].[ACF_GetAverageHours](1,dbo.client.clientid,@startdate,@enddate,'',2),0) + 
+ isnull([dbo].[ACF_GetAverageHours](2,dbo.client.clientid,@startdate,@enddate,'',2),0) + 
+ isnull([dbo].[ACF_GetAverageHours](3,dbo.client.clientid,@startdate,@enddate,'',2),0) = 0  then 2 else 1 end as [Employment Status],
 case [dbo].[getTotalPayment](dbo.client.clientid,@startdate, @enddate) when 0 then '00' else isnull([dbo].[ACF_GetAverageHours](1,dbo.client.clientid,@startdate,@enddate,'',2),'00') end as [Unsubsidized Employment],
 case [dbo].[getTotalPayment](dbo.client.clientid,@startdate, @enddate) when 0 then '00' else isnull([dbo].[ACF_GetAverageHours](2,dbo.client.clientid,@startdate,@enddate,'',2),'00') end  as [Subsidized Private Employment], 
 case [dbo].[getTotalPayment](dbo.client.clientid,@startdate, @enddate) when 0 then '00' else isnull([dbo].[ACF_GetAverageHours](3,dbo.client.clientid,@startdate,@enddate,'',2),'00') end as  [Subsidized Public Employment],
@@ -55,7 +54,10 @@ case  when [case].CaseTypeId <3  then Right('00' + CAST(dbo.getFLSACreditHours([
 case  when [case].CaseTypeId > 2  then Right('00' + CAST(dbo.getFLSACreditHours([Case].CaseId,@enddate)  as varchar(2)),2) else '00' end  as [Number of Deemed Hours for the Two-Parent Rate],
  
 --Amount of Earned Income
-[dbo].[getTotalPayment](dbo.client.clientid,@startdate, @enddate) as  [Amount of Earned Income]
+case isnull([dbo].[ACF_GetAverageHours](1,dbo.client.clientid,@startdate,@enddate,'',2),0) + 
+ isnull([dbo].[ACF_GetAverageHours](2,dbo.client.clientid,@startdate,@enddate,'',2),0) + 
+ isnull([dbo].[ACF_GetAverageHours](3,dbo.client.clientid,@startdate,@enddate,'',2),0) when 0
+then '00' else [dbo].[getTotalPayment](dbo.client.clientid,@startdate, @enddate) end as  [Amount of Earned Income]
 
 
 from dbo.client with (nolock) 
@@ -73,11 +75,11 @@ inner join [dbo].[CaseStatusHistory] with (nolock) on [dbo].[CaseStatusHistory].
 lower([dbo].[CaseStatusHistory].Status) = 'o' and datediff(d,[dbo].[CaseStatusHistory].Status_StartDate, @enddate) >= 0 
   and (datediff(d, @startdate, [dbo].[CaseStatusHistory].Status_endDate) >= 0 or [dbo].[CaseStatusHistory].Status_endDate is null)
 
-where 
-dbo.IsClientSanction( @enddate,dbo.[case].caseid) =0
+--where 
+--dbo.IsClientSanction( @enddate,dbo.[case].caseid) =0
 
-and ([VW_CaseExemptionHistory].StartDate is null or datediff(d,@enddate, [VW_CaseExemptionHistory].StartDate) > 0)  and 
-([VW_CaseExemptionHistory].endDate is null or  datediff(d,[VW_CaseExemptionHistory].endDate,@startdate) >0 )
+--and ([VW_CaseExemptionHistory].StartDate is null or datediff(d,@enddate, [VW_CaseExemptionHistory].StartDate) > 0)  and 
+--([VW_CaseExemptionHistory].endDate is null or  datediff(d,[VW_CaseExemptionHistory].endDate,@startdate) >0 )
 
 
 

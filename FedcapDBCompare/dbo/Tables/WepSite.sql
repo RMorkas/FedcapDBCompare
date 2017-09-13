@@ -1,10 +1,8 @@
 ﻿CREATE TABLE [dbo].[WepSite] (
     [WepSiteId]            INT             IDENTITY (1, 1) NOT NULL,
     [CompanyId]            INT             NOT NULL,
-    [OrganizationName]     VARCHAR (100)   NULL,
     [ProviderTypeId]       INT             NULL,
     [WepDeveloperId]       INT             NULL,
-    [OrganizationDirector] VARCHAR (100)   NULL,
     [SiteName]             VARCHAR (100)   NULL,
     [SiteStreetAddress]    VARCHAR (100)   NULL,
     [SiteCity]             VARCHAR (50)    NULL,
@@ -43,4 +41,6 @@
     CONSTRAINT [PK_WepSite] PRIMARY KEY CLUSTERED ([WepSiteId] ASC),
     CONSTRAINT [FK_WepSite_WepOrganization] FOREIGN KEY ([WepOrganizationId]) REFERENCES [dbo].[WepOrganization] ([WepOrganizationId])
 );
+
+
 

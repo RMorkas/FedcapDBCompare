@@ -5,8 +5,11 @@
     [Priority]          INT NULL,
     [Hours]             INT NULL,
     CONSTRAINT [PK_FedcapAcademyPriorities] PRIMARY KEY CLUSTERED ([PriorityId] ASC),
-    CONSTRAINT [FK_FedcapAcademyPriorities_FedcapAcademy] FOREIGN KEY ([EnrollmentId]) REFERENCES [dbo].[FedcapAcademy] ([EnrollmentId])
+    CONSTRAINT [FK_FedcapAcademyPriorities_FedcapAcademy] FOREIGN KEY ([EnrollmentId]) REFERENCES [dbo].[FedcapAcademy] ([EnrollmentId]),
+    CONSTRAINT [FK_FedcapAcademyPriority_FederalActivityType] FOREIGN KEY ([FederalActivityId]) REFERENCES [dbo].[FederalActivityType] ([FederalActivityId])
 );
+
+
 
 
 GO

@@ -1,7 +1,6 @@
 ﻿
 
 
-
 CREATE PROC [dbo].[getFedcapAcademyClients] @companyId INT
 AS
      SELECT EnrollmentId,
@@ -14,11 +13,14 @@ AS
             137 AS Department,
             staff.FirstName+' '+staff.LastName AS [Case Manager],
             92 AS ProgramIDs,
+		  client.CompanyId,
             ClientId,
             ClientUserName AS Username,
-            'fedcap' AS [Password],
+            '' AS [Password],
             2032 AS CertificationID,
-            204 AS PathwayID
+            '' AS PathwayID,
+		  acad.[StartDate] as EnrollmentStartDate,
+		  acad.[EnrollmentEndDate]
      FROM dbo.FedcapAcademy acad WITH (NOLOCK)
           INNER JOIN dbo.VW_HRACases client WITH (NOLOCK) ON acad.ClientId = client.HRACaseID AND acad.CompanyId = client.CompanyId
           LEFT OUTER JOIN dbo.[User] staff WITH (nolock) ON client.[AssignedStaffMemberId] = staff.UserID

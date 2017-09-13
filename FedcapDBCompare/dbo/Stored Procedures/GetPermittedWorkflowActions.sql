@@ -1,7 +1,4 @@
-﻿
-
-
-CREATE PROCEDURE [dbo].[GetPermittedWorkflowActions] @companyId INT, @clientId INT
+﻿CREATE PROCEDURE [dbo].[GetPermittedWorkflowActions] @companyId INT, @clientId INT
 AS
 BEGIN	
 	SET NOCOUNT ON;
@@ -19,6 +16,7 @@ BEGIN
 	LEFT JOIN dbo.WorkflowClientBranch (nolock) cb ON cb.ClientId = ca.ClientId AND cb.WorkflowBranchId = w.WorkflowBranchId AND cb.IsActive = 1
     LEFT JOIN dbo.WorkflowClientCondition (nolock) cc ON cc.ClientId = ca.ClientId AND cc.WorkflowConditionId = w.WorkflowConditionId 
     WHERE w.CompanyId = @companyId AND 
+	    (w.DaysBeforePending IS NULL OR DATEDIFF(d, ca.CreatedAt, GETDATE()) >= w.DaysBeforePending) AND
 		(w.WorkflowConditionId IS NULL OR cc.WorkflowConditionId IS NOT NULL) AND
 		(w.WorkflowBranchId IS NULL OR cb.WorkflowBranchId IS NOT NULL) AND 
 		w.WorkflowActionId NOT IN -- Filter out actions that the client did not complete at least one of the prerequistes
@@ -32,6 +30,7 @@ BEGIN
 		    LEFT JOIN dbo.WorkflowClientCondition (nolock) cc ON cc.WorkflowConditionId = w.WorkflowConditionId
 				AND cc.ClientId = @clientId
 		    WHERE w.CompanyId = @companyId AND
+			    (w.DaysBeforePending IS NULL OR DATEDIFF(d, ca.CreatedAt, GETDATE()) >= w.DaysBeforePending) AND
 				(w.WorkflowConditionId IS NULL OR cc.WorkflowConditionId IS NOT NULL) AND
 				(w.WorkflowBranchId IS NULL OR cb.WorkflowBranchId IS NOT NULL) AND 
 				ca.WorkflowActionId IS NULL

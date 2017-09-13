@@ -1,11 +1,12 @@
-﻿
-
-CREATE PROCEDURE [dbo].[GetWepAssignments] 
+﻿CREATE PROCEDURE [dbo].[GetWepAssignments] 
 @caseNumber varchar(50) =NULL,
 @companyId int,
 @organizationName varchar(100),
 @siteName varchar(100),
-@positionTypeId int
+@positionTypeId int,
+@startDate datetime,
+@endDate datetime,
+@wepSitePositionId int
 AS
 BEGIN	
 	SET NOCOUNT ON;
@@ -22,7 +23,9 @@ BEGIN
 		wpa.EndDate,
 		wpa.IsActive,
 		totalScheduledHours.TotalHours AS TotalScheduledHours,
-		totalAttendedHours.TotalHours AS TotalAttendedHours
+		totalAttendedHours.TotalHours AS TotalAttendedHours,
+		cases.IsPrivilegeRequired AS IsPrivilegeRequired,
+		cases.HRACaseID AS ClientId
 	FROM dbo.WepSitePositionAssignment wpa WITH (NOLOCK)
 	INNER JOIN dbo.VW_HRACases cases WITH (NOLOCK) ON cases.HRACaseID = wpa.ClientId AND cases.CompanyId = @companyId
 	INNER JOIN dbo.WepSitePosition wp WITH (NOLOCK) ON wpa.WepSitePositionId = wp.WepSitePositionId
@@ -48,5 +51,11 @@ BEGIN
 		(@positionTypeId = 0 OR wp.PositionTypeId = @positionTypeId)
 		AND
 		(LEN(@caseNumber) = 0 OR cases.HRACaseNumber = @caseNumber)
+		AND
+		(@startDate is null OR wpa.StartDate >= @startDate)
+		AND
+		(@endDate is null OR wpa.EndDate <= @endDate)
+		AND
+		(@wepSitePositionId = 0 OR wpa.WepSitePositionId = @wepSitePositionId)
 	ORDER BY cases.CaseFirstName, wpa.StartDate
 END

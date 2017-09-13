@@ -29,7 +29,9 @@ BEGIN
 		ISNULL(s.SiteName, '') as SiteName,
 		client.IsPrivilegeRequired,
 		MAX(cb.CreatedAt) as BranchCreatedAt,
-		case_def.InternalDescription as CaseStatus, client.ClientId
+		case_def.InternalDescription as CaseStatus, client.ClientId,
+		ISNULL(client.StreetAddress, '') + ' ' + ISNULL(client.ApartmentNumber, '') + ', ' + ISNULL(client.City, '') + ', ' 
+			+  ISNULL(client.State, '') + ' ' + ISNULL(client.ZipCode, '') as [Address]
     FROM   dbo.WorkflowClientAction ca WITH (NOLOCK)
        INNER JOIN dbo.WorkflowRule wr WITH (NOLOCK) ON ca.WorkflowActionId = wr.WorkflowPrerequisiteActionId 
 	   INNER JOIN dbo.VW_HRACases cases WITH (NOLOCK) ON cases.HRACaseID = ca.ClientId AND cases.CompanyId = @companyId
@@ -43,6 +45,7 @@ BEGIN
 	   LEFT JOIN dbo.[CaseStatus_Def] case_def WITH (NOLOCK) ON case_def.InternalStatusCode = c.StatusId AND case_def.CompanyId = @companyId
 	   --INNER JOIN dbo.[Group] g on u.GroupId = g.GroupId AND g.CompanyId = @companyId
     WHERE wr.CompanyId = @companyId AND ca.IsActive = 1 AND ca.IsDeleted = 0 AND
+	    (wr.DaysBeforePending IS NULL OR DATEDIFF(d, ca.CreatedAt, GETDATE()) >= wr.DaysBeforePending) AND
 		(wr.WorkflowConditionId IS NULL OR cc.WorkflowConditionId IS NOT NULL) AND
 		(wr.WorkflowBranchId IS NULL OR cb.WorkflowBranchId IS NOT NULL) AND 
 		wr.WorkflowActionId NOT IN -- filter out actions the client already completed
@@ -61,6 +64,7 @@ BEGIN
 		    LEFT JOIN dbo.WorkflowClientAction ca WITH (NOLOCK) ON ca.WorkflowActionId = w.WorkflowPrerequisiteActionId AND ca.ClientId = client.ClientId AND ca.IsActive = 1 AND ca.IsDeleted = 0
 			LEFT JOIN dbo.WorkflowClientBranch cb WITH (NOLOCK) ON cb.WorkflowBranchId = w.WorkflowBranchId AND cb.ClientId = client.ClientId AND cb.IsActive	= 1	    
 		    WHERE w.CompanyId = @companyId AND
+			    (w.DaysBeforePending IS NULL OR DATEDIFF(d, ca.CreatedAt, GETDATE()) >= w.DaysBeforePending) AND
 				(w.WorkflowConditionId IS NULL OR cc.WorkflowConditionId IS NOT NULL) AND
 				(w.WorkflowBranchId IS NULL OR cb.WorkflowBranchId IS NOT NULL) AND 
 				ca.WorkflowActionId IS NULL
@@ -77,6 +81,7 @@ BEGIN
 		AND
 		(@caseStatus IS NULL OR @caseStatus = '' OR CHARINDEX(UPPER(c.StatusId), UPPER(@caseStatus)) > 0)
 	GROUP BY client.CaseFirstName , client.CaseLastName, client.ClientNo, Client.Suffix , client.LineNumber,
-	client.SSN, a.Code, a.Description, u.FirstName, u.LastName, a.WorkflowActionId, a.WorkflowBranchId, s.SiteName, client.IsPrivilegeRequired, case_def.InternalDescription, client.ClientId
+	client.SSN, a.Code, a.Description, u.FirstName, u.LastName, client.StreetAddress, client.ApartmentNumber, client.City, client.State, client.ZipCode,
+		a.WorkflowActionId, a.WorkflowBranchId, s.SiteName, client.IsPrivilegeRequired, case_def.InternalDescription, client.ClientId
 
 END

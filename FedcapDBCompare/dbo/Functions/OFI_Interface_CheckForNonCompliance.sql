@@ -69,11 +69,11 @@ and mostrecentmissedappt.ScheduleId <> future_activity.ScheduleId and future_act
 )
 
 --there is at least one attended activity between most recent sanction requested one and sanctioned
-and @mostrecentsanctionsubmitted = '01/01/2001'  or exists (select scheduleid from dbo.Schedule future_activity with (nolock)  where 
+and (@mostrecentsanctionsubmitted = '01/01/2001'  or exists (select scheduleid from dbo.Schedule future_activity with (nolock)  where 
 mostrecentmissedappt.clientid = future_activity.clientid and mostrecentmissedappt.companyid =  future_activity.companyid and 
 (DATEDIFF(mi, future_activity.[StartTime], mostrecentmissedappt.[StartTime]) > 0  
 and mostrecentmissedappt.ScheduleId <> future_activity.ScheduleId and future_activity.AttendanceStatus in (1,2,3) and isnull(future_activity.EventId, 0) <> 74 ) and future_activity.IsDeleted = 0
-and datediff(d,@mostrecentsanctionsubmitted,future_activity.Date) >= 0)
+and datediff(d,@mostrecentsanctionsubmitted,future_activity.Date) > 0))
 
 order by mostrecentmissedappt.[Date]))
 
@@ -85,25 +85,25 @@ inner join dbo.[case] with (nolock) on  dbo.[case].caseid =dbo.client.activecase
 outer apply (select top 1 dbo.ClientContact.ClientContactId,IsContact, IsContactMade, convert(varchar(10),contactdate,101) + ' ' +  convert(varchar(5),ContactTime,108) as contactdate,' Phone: ' + ContactNote  as ContactNote  from dbo.ClientContact with (nolock) where dbo.ClientContact.clientid = missed_appt.clientid and 
  datediff(d,missed_appt.[Date],dbo.ClientContact.ContactDate) >= 0 and dbo.ClientContact.IsDeleted = 0 and 
  dbo.ClientContact.ContactMethodId =522 and dbo.ClientContact.ContactTypeId=520 and
-  datediff(hh,dbo.ClientContact.ContactDate, getdate()) > 24 and 
+  datediff(hh,dbo.ClientContact.ContactDate, getdate()) > 24 --and 
 	 -- if client is sanctioned and 21 days has passed since sanction submitted only return contact that occurs after the 21 days after sanction submitted
-	 (datediff(d, isnull(@mostrecentsanctionsubmitted, getdate()), getdate()) <= @sanctionProcessDays or datediff(d, @mostrecentsanctionsubmitted, dbo.ClientContact.ContactDate) > @sanctionProcessDays)
+	 --(datediff(d, isnull(@mostrecentsanctionsubmitted, getdate()), getdate()) <= @sanctionProcessDays or datediff(d, @mostrecentsanctionsubmitted, dbo.ClientContact.ContactDate) > @sanctionProcessDays)
  order by contactdate)  as contactphone
 --find mail contact date
 outer apply (select top 1  contactmail.ClientContactId, convert(varchar(10),contactmail.contactdate ,101) + ' ' +  convert(varchar(5),contactmail.contacttime,108) as contactdate, IsContact, ' Mail: ' + ContactNote  as ContactNote from dbo.ClientContact contactmail with (nolock) where contactmail.clientid = missed_appt.clientid and 
  datediff(d, missed_appt.[Date],contactmail.ContactDate) >= 0  and contactmail.IsDeleted = 0 and 
  contactmail.ContactMethodId = 525 and contactmail.ContactTypeId=520 and
- datediff(hh,contactmail.ContactDate, getdate()) > 24 and 
+ datediff(hh,contactmail.ContactDate, getdate()) > 24 --and 
 	-- if client is sanctioned and 21 days has passed since sanction submitted only return contact that occurs after the 21 days after sanction submitted
-	 (datediff(d, @mostrecentsanctionsubmitted, contactmail.ContactDate) > @sanctionProcessDays)
+	 --(datediff(d, @mostrecentsanctionsubmitted, contactmail.ContactDate) > @sanctionProcessDays)
  order by contactdate) as contactmail
 --find home visit date
 outer apply (select top 1 dbo.ClientContact.ClientContactId, convert(varchar(10),dbo.ClientContact.ContactDate,101) + ' ' +  convert(varchar(5),dbo.ClientContact.ContactTime,108) as contactdate, IsContact, IsContactMade,' Home visit: ' + ContactNote  as ContactNote  from dbo.ClientContact with (nolock)  where  dbo.ClientContact.clientid = missed_appt.clientid and 
  ClientContact.IsDeleted = 0 and
  datediff(d, missed_appt.[Date],dbo.ClientContact.ContactDate) >= 0  and dbo.ClientContact.ContactMethodId =526 and dbo.ClientContact.ContactTypeId=520 and
-  datediff(hh,dbo.ClientContact.ContactDate, getdate()) > 24  and 
+  datediff(hh,dbo.ClientContact.ContactDate, getdate()) > 24  --and 
 	-- if client is sanctioned and 21 days has passed since sanction submitted only return contact that occurs after the 21 days after sanction submitted
-	 ( datediff(d, @mostrecentsanctionsubmitted, dbo.ClientContact.ContactDate) > @sanctionProcessDays)
+	 --( datediff(d, @mostrecentsanctionsubmitted, dbo.ClientContact.ContactDate) > @sanctionProcessDays)
 	 
 order by contactdate) as contacthomevisit
 outer apply

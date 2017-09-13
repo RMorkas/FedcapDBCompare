@@ -35,6 +35,8 @@
 );
 
 
+
+
 GO
 CREATE NONCLUSTERED INDEX [index_ScheduleClientId]
     ON [dbo].[Schedule]([ClientId] ASC);
@@ -389,6 +391,8 @@ AND
 s.AttendanceStatus = 0 --Scheduled
 AND
 ISNULL(s.IsDeleted,0) = 0
+AND
+s.IsCoreActivity in (1,0)
 
 SET @ScheduledRemainingHours = ISNULL(@ScheduledRemainingHours,0)
 -----------------

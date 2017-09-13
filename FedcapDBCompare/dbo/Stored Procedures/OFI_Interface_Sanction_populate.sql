@@ -1,4 +1,5 @@
-﻿CREATE procedure [dbo].[OFI_Interface_Sanction_populate] (@statusmessage varchar(max) output)
+﻿
+CREATE procedure [dbo].[OFI_Interface_Sanction_populate] (@statusmessage varchar(max) output)
 as
 BEGIN
 set nocount on
@@ -55,8 +56,8 @@ inner join  dbo.ClientContact contacthomevisit with (nolock) on contacthomevisit
 left join  dbo.ClientContact goodcausenotapproved with (nolock) on goodcausenotapproved.ClientContactId =NonComplianceDetails.ClientContactId_NotApprovedGoodCause
 
  left outer join dbo.enumes with (nolock)  on enumes.groupid =528 and enumid = goodcausenotapproved.GoodCauseReasonId
- --where not exists (select dbo.OFI_Interface_Sanction_audit.id  from dbo.OFI_Interface_Sanction_audit with (nolock) where 
- --dbo.OFI_Interface_Sanction_audit.clientid =missed_appt.clientid and datediff(d,dbo.OFI_Interface_Sanction_audit.datesubmitted, getdate()) <= 21 )
+ where not exists (select dbo.OFI_Interface_Sanction_audit.id  from dbo.OFI_Interface_Sanction_audit with (nolock) where 
+ dbo.OFI_Interface_Sanction_audit.clientid =missed_appt.clientid and datediff(d,dbo.OFI_Interface_Sanction_audit.scheduleid,missed_appt.ScheduleId)  = 0 )
  --and not exists (select lastoutreachattempt.ClientContactId from dbo.clientcontact lastoutreachattempt with (nolock) where lastoutreachattempt.clientid =missed_appt.clientid 
  --and datediff(hh,lastoutreachattempt.ContactDate, getdate()) <= 24   and lastoutreachattempt.ContactTypeId =520) 
  and dbo.client.ExemptionEffectiveDate is null

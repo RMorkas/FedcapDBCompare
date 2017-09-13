@@ -1,4 +1,5 @@
-﻿CREATE PROC [dbo].[UpdateSentToFedcapAcademy] @companyId INT
+﻿
+CREATE PROC [dbo].[UpdateSentToFedcapAcademy] @companyId INT
 AS
      UPDATE dbo.FedcapAcademy
        SET
@@ -10,6 +11,6 @@ AS
          WHERE acad.CompanyId = @companyId
                AND ISNULL(acad.IsDeleted, 0) = 0
                AND ISNULL(acad.IsSentToFedcapAcademy, 0) = 0
-               AND ((DATEADD(day, 0, DATEDIFF(day, 0, acad.StartDate)) <= DATEADD(day, 0, DATEDIFF(day, 0, GETDATE())))
-                    AND (DATEADD(day, 0, DATEDIFF(day, 0, acad.EndDate)) >= DATEADD(day, 0, DATEDIFF(day, 0, GETDATE()))))
+               --AND ((DATEADD(day, 0, DATEDIFF(day, 0, acad.StartDate)) <= DATEADD(day, 0, DATEDIFF(day, 0, GETDATE())))
+               --     AND (DATEADD(day, 0, DATEDIFF(day, 0, acad.EndDate)) >= DATEADD(day, 0, DATEDIFF(day, 0, GETDATE()))))
      );

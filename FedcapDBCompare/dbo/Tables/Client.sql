@@ -61,10 +61,15 @@
     [IsPrivilegeRequired]                 BIT           CONSTRAINT [DF_Client_IsPrivilegeRequired] DEFAULT ((0)) NULL,
     [SanctionEffectiveDate]               DATETIME      NULL,
     [ExemptionEffectiveDate]              DATETIME      NULL,
+    [UserIdCustom2]                       INT           NULL,
+    [UserIdCustom3]                       INT           NULL,
+    [UserIdCustom4]                       INT           NULL,
     CONSTRAINT [PK_Case] PRIMARY KEY CLUSTERED ([ClientId] ASC) WITH (FILLFACTOR = 80),
     CONSTRAINT [FK_Client_Enumes] FOREIGN KEY ([PrimaryLanguageId]) REFERENCES [dbo].[Enumes] ([EnumId]),
     CONSTRAINT [FK_Client_LINC_LandLord] FOREIGN KEY ([LandLordId]) REFERENCES [dbo].[LINC_LandLord] ([LandLordId])
 );
+
+
 
 
 GO

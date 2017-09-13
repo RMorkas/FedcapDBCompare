@@ -20,10 +20,14 @@
     [CompletionDate]   DATETIME      NULL,
     [Score]            INT           NULL,
     [IsProcessed]      BIT           NULL,
+    [ProcessedDate]    SMALLDATETIME NULL,
+    [HomeWorkHours]    INT           NULL,
     [RejectedHours]    INT           NULL,
     [RejectedReason]   VARCHAR (300) NULL,
     [FirstName]        VARCHAR (50)  NULL,
     [LastName]         VARCHAR (50)  NULL,
     CONSTRAINT [PK_FedcapAcademy_Import] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
+
+
 

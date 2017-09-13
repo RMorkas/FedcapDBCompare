@@ -1,8 +1,6 @@
 ﻿
 
 
-
-
 CREATE View [dbo].[VW_CaseMonthlyCalc]
 AS
 SELECT        CaseId, CompanyId, IsActive, CaseNo, CaseTypeId, TypeCode, TypeName, EngagmentStatus, StartDate, EndDate, MonthDate, RemainingDaysOfTheMonth, 
@@ -13,7 +11,7 @@ SELECT        CaseId, CompanyId, IsActive, CaseNo, CaseTypeId, TypeCode, TypeNam
                          dbo.getCriticalImapactDeadline(MonthDate, (CaseRequiredHours - CaseCountableHours), CaseTypeId) AS DeadlineDate, SiteId, SiteName,
 						 CaseFLSAAttendStatusScheduledHrs, CaseOJTActualHrs, CaseOJTScheduledHrs, CaseJSJRActualHoursFY, CaseJSJRScheduledHoursFY, CaseVOCEDActualHrs, CaseVOCEDScheduledHrs,
 						 IsPrivilegeRequired, StatusId, StaffName, dbo.IsClientSanction(MonthDate, CaseId) AS IsClientSanction,
-						 dbo.IsClientExempted(MonthDate, CaseId) AS IsClientExempted
+						 dbo.IsClientExempted(MonthDate, CaseId) AS IsClientExempted, CaseEmploymentScheduledHours, CaseEmploymentActualHours
 FROM            (SELECT        CaseId, CompanyId, IsActive, CaseNo, CaseTypeId, TypeCode, TypeName, dbo.getEngagmentStatus(CaseId, MonthDate, CaseTypeId) AS EngagmentStatus, StartDate, EndDate, 
                                                     MonthDate, RemainingDaysOfTheMonth, CaseRequiredHours, CaseCoreMin, CaseScheduledRemainingHours, 
                                                     CASE WHEN CaseCoreActualHours >= CaseCoreMin THEN (CaseCoreActualHours + CaseNonCoreActualHours) 
@@ -24,7 +22,7 @@ FROM            (SELECT        CaseId, CompanyId, IsActive, CaseNo, CaseTypeId, 
                                                     CaseRemainingVocEdMonths, CaseVocEdMonthsScheduled, CaseAbsentHoursMonthCount, CaseAbsentHoursYearCount, FoodStampSubsidy, TANSubsidy, 
                                                     CAST((ISNULL(FoodStampSubsidy, 0) + ISNULL(TANSubsidy, 0)) / ISNULL(MinWage, 1) AS Numeric(18, 0)) AS FLSAMaxHours, SiteId, SiteName,
 													CaseFLSAAttendStatusScheduledHrs, CaseOJTActualHrs, CaseOJTScheduledHrs,CaseJSJRActualHoursFY, CaseJSJRScheduledHoursFY, CaseVOCEDActualHrs, CaseVOCEDScheduledHrs,
-													IsPrivilegeRequired, StatusId, StaffName
+													IsPrivilegeRequired, StatusId, StaffName, CaseEmploymentScheduledHours, CaseEmploymentActualHours
 
                           FROM            (SELECT        dbo.[Case].CaseId, dbo.[Case].CompanyId, dbo.[Case].IsActive, dbo.[Case].CaseNo, dbo.CaseType.CaseTypeId, dbo.CaseType.TypeCode, 
                                                                               dbo.CaseType.TypeName, dbo.[Case].StartDate, dbo.[Case].EndDate, dbo.ClientMonthlyCalc.MonthDate, 
@@ -55,6 +53,9 @@ FROM            (SELECT        CaseId, CompanyId, IsActive, CaseNo, CaseTypeId, 
 																			  SUM(ISNULL(dbo.ClientMonthlyCalc.ClientVOCEDScheduledHrs,0)) AS CaseVOCEDScheduledHrs,
 																			  ISNULL(clientPrivielege.IsPrivilegeRequired,0) AS IsPrivilegeRequired,
 																			  dbo.[Case].StatusId, clientPrivielege.StaffName
+																			  ,
+															 SUM(ISNULL(dbo.ClientMonthlyCalc.EmploymentScheduledHours,0)) AS CaseEmploymentScheduledHours, 
+															 SUM(ISNULL(dbo.ClientMonthlyCalc.EmploymentActualHours,0)) AS CaseEmploymentActualHours
                                                     FROM            dbo.[Case] with(nolock) inner join
                                                                               dbo.Site AS office with(nolock) ON dbo.[Case].SiteId = office.SiteId inner join
                                                                               dbo.CaseType with(nolock) ON dbo.[Case].CaseTypeId = dbo.CaseType.CaseTypeId inner join
