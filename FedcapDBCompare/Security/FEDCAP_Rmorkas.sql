@@ -1,0 +1,2 @@
+﻿CREATE USER [FEDCAP\Rmorkas] FOR LOGIN [FEDCAP\Rmorkas];
+

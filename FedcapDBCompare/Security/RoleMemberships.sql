@@ -1,70 +1,34 @@
-﻿ALTER ROLE [db_owner] ADD MEMBER [FedCapCMDbUser];
+﻿EXECUTE sp_addrolemember @rolename = N'db_owner', @membername = N'FEDCAP\VKhandelwal';
 
 
 GO
-ALTER ROLE [db_owner] ADD MEMBER [FEDCAPSYSDB\tyu];
+EXECUTE sp_addrolemember @rolename = N'db_owner', @membername = N'FEDCAP\SAshrit';
 
 
 GO
-ALTER ROLE [db_owner] ADD MEMBER [kkarpova];
+EXECUTE sp_addrolemember @rolename = N'db_owner', @membername = N'FEDCAP\Rmorkas';
 
 
 GO
-ALTER ROLE [db_owner] ADD MEMBER [FedCapCMBTCUser];
+EXECUTE sp_addrolemember @rolename = N'db_datareader', @membername = N'FEDCAP\sbraksmajer';
 
 
 GO
-
-
-
-GO
-ALTER ROLE [db_datareader] ADD MEMBER [FEDCAP\MEstrada];
+EXECUTE sp_addrolemember @rolename = N'db_datareader', @membername = N'FEDCAP\IYeliseyev';
 
 
 GO
-ALTER ROLE [db_datareader] ADD MEMBER [FEDCAP\AMansour];
+EXECUTE sp_addrolemember @rolename = N'db_datareader', @membername = N'FedCapCMDbUser';
 
 
 GO
-ALTER ROLE [db_datareader] ADD MEMBER [FEDCAP\PCarrasco];
+EXECUTE sp_addrolemember @rolename = N'db_datawriter', @membername = N'FEDCAP\sbraksmajer';
 
 
 GO
-ALTER ROLE [db_datareader] ADD MEMBER [FEDCAP\sbraksmajer];
+EXECUTE sp_addrolemember @rolename = N'db_datawriter', @membername = N'FEDCAP\IYeliseyev';
 
 
 GO
-ALTER ROLE [db_datareader] ADD MEMBER [IYeliseyev];
-
-
-GO
-ALTER ROLE [db_datareader] ADD MEMBER [wcook];
-
-
-GO
-ALTER ROLE [db_datawriter] ADD MEMBER [FEDCAP\MEstrada];
-
-
-GO
-ALTER ROLE [db_datawriter] ADD MEMBER [FEDCAP\AMansour];
-
-
-GO
-ALTER ROLE [db_datawriter] ADD MEMBER [FEDCAP\PCarrasco];
-
-
-GO
-ALTER ROLE [db_datawriter] ADD MEMBER [FEDCAP\sbraksmajer];
-
-
-GO
-ALTER ROLE [db_owner] ADD MEMBER [pcarrasco];
-
-
-GO
-ALTER ROLE [db_owner] ADD MEMBER [mhanna];
-
-
-GO
-ALTER ROLE [db_datawriter] ADD MEMBER [IYeliseyev];
+EXECUTE sp_addrolemember @rolename = N'db_datawriter', @membername = N'FedCapCMDbUser';
 

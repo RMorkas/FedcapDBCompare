@@ -3,12 +3,12 @@
   <Version>10</Version>
   <SourceModelProvider>
     <ConnectionBasedModelProvider>
-      <ConnectionString>Data Source=192.168.17.3;Initial Catalog=Dev_FedCapCM;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=True</ConnectionString>
+      <ConnectionString>Data Source=204.8.89.53;Initial Catalog=UAT_FedCapCM;Persist Security Info=True;User ID=rmorkas;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=True</ConnectionString>
     </ConnectionBasedModelProvider>
   </SourceModelProvider>
   <TargetModelProvider>
     <ConnectionBasedModelProvider>
-      <ConnectionString>Data Source=172.28.5.103;Initial Catalog=UAT_FedCapCM;Persist Security Info=True;User ID=Rmorkas;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=True</ConnectionString>
+      <ConnectionString>Data Source=fedcapsqlserver.database.windows.net;Initial Catalog=UAT_FedCapCM;Persist Security Info=True;User ID=FedcapAdmin;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=True</ConnectionString>
     </ConnectionBasedModelProvider>
   </TargetModelProvider>
   <SchemaCompareSettingsService>

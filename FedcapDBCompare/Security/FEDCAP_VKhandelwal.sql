@@ -1,0 +1,2 @@
+﻿CREATE USER [FEDCAP\VKhandelwal] FOR LOGIN [FEDCAP\VKhandelwal];
+

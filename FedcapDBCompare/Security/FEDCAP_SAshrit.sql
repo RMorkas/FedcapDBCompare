@@ -1,0 +1,2 @@
+﻿CREATE USER [FEDCAP\SAshrit] FOR LOGIN [FEDCAP\SAshrit];
+
