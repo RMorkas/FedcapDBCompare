@@ -6,7 +6,6 @@
     [IsUAT]       BIT          NULL,
     [IsStaging]   BIT          NULL,
     [IsProd]      BIT          NULL,
-    [TesColumn] INT NULL, 
     CONSTRAINT [PK_Fed_LogTables] PRIMARY KEY CLUSTERED ([TableId] ASC)
 );
 
