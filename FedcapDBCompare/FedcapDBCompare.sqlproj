@@ -123,7 +123,6 @@
     <Folder Include="Properties" />
     <Folder Include="dbo\" />
     <Folder Include="dbo\Tables\" />
-    <Folder Include="Security\" />
     <Folder Include="dbo\Stored Procedures\" />
   </ItemGroup>
   <ItemGroup>
@@ -295,20 +294,6 @@
       <AnsiNulls>On</AnsiNulls>
       <QuotedIdentifier>On</QuotedIdentifier>
     </Build>
-    <Build Include="Security\ObjectExecute.sql" />
-    <Build Include="Security\objectreader.sql" />
-    <Build Include="Security\FEDCAP_sbraksmajer.sql" />
-    <Build Include="Security\FEDCAP_sbraksmajer_1.sql" />
-    <Build Include="Security\FEDCAP_IYeliseyev.sql" />
-    <Build Include="Security\FEDCAP_IYeliseyev_1.sql" />
-    <Build Include="Security\FEDCAP_VKhandelwal.sql" />
-    <Build Include="Security\FEDCAP_SAshrit.sql" />
-    <Build Include="Security\FEDCAP_SAshrit_1.sql" />
-    <Build Include="Security\FedCapCMDbUser.sql" />
-    <Build Include="Security\FedCapCMDbUser_1.sql" />
-    <Build Include="Security\FEDCAP_Rmorkas.sql" />
-    <Build Include="Security\FEDCAP_Rmorkas_1.sql" />
-    <Build Include="Security\RoleMemberships.sql" />
     <Build Include="dbo\Stored Procedures\dbo.GetMesssageApiKey.sql">
       <AnsiNulls>On</AnsiNulls>
       <QuotedIdentifier>On</QuotedIdentifier>

@@ -1,2 +1,0 @@
-﻿CREATE USER [FEDCAP\IYeliseyev] FOR LOGIN [FEDCAP\IYeliseyev];
-

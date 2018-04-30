@@ -1,3 +1,0 @@
-﻿CREATE LOGIN [FEDCAP\sbraksmajer]
-    FROM WINDOWS WITH DEFAULT_LANGUAGE = [us_english];
-
