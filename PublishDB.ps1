@@ -1,2 +1,2 @@
 ﻿
-& "C:\program files\microsoft sql server\130\DAC\bin\SqlPackage.exe" /a:publish /tcs:"Data Source=204.8.89.53;Initial Catalog=FedcapStaticData;User ID=rmorkas;Password=FedCap123" /sf:"C:\TFSAgent\_work\2\s\FedcapDBCompare\bin\Debug\FedcapDBCompare.dacpac" /p:RegisterDataTierApplication=true /p:BlockWhenDriftDetected=false
+& "C:\program files\microsoft sql server\130\DAC\bin\SqlPackage.exe" /a:publish /tcs:"Data Source=204.8.89.53;Initial Catalog=FedcapStaticData;User ID=rmorkas;Password=r@ny2100" /sf:"C:\TFSAgent\_work\2\s\FedcapDBCompare\bin\Debug\FedcapDBCompare.dacpac" /p:RegisterDataTierApplication=true /p:BlockWhenDriftDetected=false

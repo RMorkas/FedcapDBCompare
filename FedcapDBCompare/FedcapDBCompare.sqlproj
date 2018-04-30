@@ -299,4 +299,7 @@
       <QuotedIdentifier>On</QuotedIdentifier>
     </Build>
   </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="FedcapDBCompare.refactorlog" />
+  </ItemGroup>
 </Project>
